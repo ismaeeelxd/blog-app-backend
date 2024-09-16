@@ -2,8 +2,10 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, Enum, DateTime
 from sqlalchemy.sql import func
 from flaskr.db.sql_db import db
+from flask_login import UserMixin
 
-class User(db.Model):
+
+class User(db.Model,UserMixin):
     __tablename__ = 'users'
     user_id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String, unique=True, nullable=False)
@@ -19,6 +21,10 @@ class User(db.Model):
     def set_password(self, password):
         from werkzeug.security import generate_password_hash
         self.password_hash = generate_password_hash(password)
+
+    def get_id(self):
+        return self.user_id
+
 
     def check_password(self, password):
         from werkzeug.security import check_password_hash

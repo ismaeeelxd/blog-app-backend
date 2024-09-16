@@ -2,6 +2,8 @@ from flask import request, jsonify, current_app
 from werkzeug.security import check_password_hash, generate_password_hash
 from flaskr.utils.auth_utils import generate_jwt
 from flaskr.models.user import User
+from flaskr import login_user
+
 
 class AuthController:
 
@@ -41,6 +43,8 @@ class AuthController:
 
         if error is None:
             token = generate_jwt(user.user_id)
+            login_user(user)
             return jsonify({"token": token}), 200
         else:
             return jsonify({"error": error}), 401
+        

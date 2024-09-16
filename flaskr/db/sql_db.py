@@ -40,6 +40,5 @@ class SQLDatabase(AbstractDatabase):
         return query.first()
 
     def create_tables(self, app):
-        """Create all tables using SQLAlchemy's create_all() method."""
         with app.app_context():
             db.create_all()
