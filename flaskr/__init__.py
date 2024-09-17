@@ -5,9 +5,14 @@ from flaskr.db.nosql_db import NoSQLDatabase
 from dotenv import load_dotenv
 from flaskr.models.user import User  
 from flaskr.models.blog import Blog
-from flask_login import LoginManager, login_user, current_user, login_required, logout_user
+from flask_jwt_extended import JWTManager
+from flask_swagger_ui import get_swaggerui_blueprint
+SWAGGER_URL = '/api/docs'
+API_URL = "/static/swagger.json"
 
 load_dotenv()
+
+
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -15,10 +20,10 @@ def create_app(test_config=None):
     db_type = os.getenv('DATABASE_TYPE')
     app.secret_key = os.environ.get('SECRET_KEY', 'dev')
 
-    login_manager = LoginManager()
-    login_manager.init_app(app)
-    login_manager.login_view = 'login'
+    jwt = JWTManager(app)
 
+    def load_user(user_id):
+        return User.query.get(int(user_id))
 
     if db_type == 'sql':
         db = SQLDatabase()
@@ -31,6 +36,8 @@ def create_app(test_config=None):
         
         with app.app_context():
             db.create_tables(app)
+
+
 
     elif db_type == 'nosql':
         db = NoSQLDatabase()

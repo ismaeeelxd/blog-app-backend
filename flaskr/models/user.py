@@ -14,18 +14,12 @@ class User(db.Model,UserMixin):
     role = Column(Enum('admin', 'reader', 'author', name='user_roles'), nullable=False)
     created_at = Column(DateTime, default=func.now(), nullable=False)
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now(), nullable=True)
-
+    blogs = db.relationship('Blog', backref='author', lazy=True)
+    
     def __repr__(self):
         return f"<User(user_id={self.user_id}, username='{self.username}', email='{self.email}', role='{self.role}')>"
-
-    def set_password(self, password):
-        from werkzeug.security import generate_password_hash
-        self.password_hash = generate_password_hash(password)
 
     def get_id(self):
         return self.user_id
 
 
-    def check_password(self, password):
-        from werkzeug.security import check_password_hash
-        return check_password_hash(self.password_hash, password)

@@ -21,3 +21,10 @@ class AbstractDatabase(ABC):
     @abstractmethod
     def fetch_one(self, query, params=None):
         pass
+    
+    @abstractmethod
+    def create_record(self, model, **kwargs):
+        pass
+    @abstractmethod
+    def update_record(self, model,filters=None, **kwargs):
+        pass
