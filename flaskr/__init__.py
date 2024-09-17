@@ -55,9 +55,10 @@ def create_app(test_config=None):
 
     from .views.auth import auth_bp
     from .views.blog import blog_bp
+    from .views.user import user_bp
     app.register_blueprint(auth_bp)
     app.register_blueprint(blog_bp)
-
+    app.register_blueprint(user_bp)
     try:
         os.makedirs(app.instance_path)
     except OSError:

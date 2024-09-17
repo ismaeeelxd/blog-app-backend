@@ -26,6 +26,7 @@ class SQLDatabase(AbstractDatabase):
             query = session.query(model)
             if filters:
                 query = query.filter_by(**filters)
+                print(query)
             return query.all()
         except Exception as e:
             session.rollback()
@@ -71,12 +72,17 @@ class SQLDatabase(AbstractDatabase):
             record = query.first()
             if record:
                 for key, value in kwargs.items():
+                    if value == None or key == None:
+                        continue
                     setattr(record, key, value)
                 session.commit()
+                logging.info(f"Record updated with ID: {record.id}")
                 return record
             return None
         except Exception as e:
             session.rollback()
+            logging.error(f"Error creating record: {e}")
+
             raise e
         finally:
             session.close()
