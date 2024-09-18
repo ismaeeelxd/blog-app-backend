@@ -2,10 +2,9 @@ from flask import g, jsonify, current_app
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 from functools import wraps
 from flaskr.models.user import User
-from datetime import timedelta
+
 def generate_jwt(user_id):
-    expires_delta = timedelta(days=2)
-    return create_access_token(identity=user_id,expires_delta=expires_delta)
+    return create_access_token(identity=user_id)
 
 def role_required(roles):
     def wrapper(f):
@@ -13,11 +12,15 @@ def role_required(roles):
         @jwt_required()
         def wrapped(*args, **kwargs):
             try:
+               
                 user_id = get_jwt_identity()
+
                 if not user_id:
                     return jsonify({'error': 'Invalid or expired token'}), 401
+
                 db = current_app.config['DATABASE']
-                user = db.fetch_one(User, filters={'id': user_id})
+                user = db.fetch_one(User, filters={'user_id': user_id})
+
                 if not user:
                     return jsonify({'error': 'User not found'}), 404
 
