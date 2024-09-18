@@ -6,9 +6,6 @@ from dotenv import load_dotenv
 from flaskr.models.user import User  
 from flaskr.models.blog import Blog
 from flask_jwt_extended import JWTManager
-from flask_swagger_ui import get_swaggerui_blueprint
-SWAGGER_URL = '/api/docs'
-API_URL = "/static/swagger.json"
 
 load_dotenv()
 
