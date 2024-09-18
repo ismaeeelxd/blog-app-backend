@@ -17,7 +17,7 @@ def get_blog_by_id(blog_id):
 @blog_bp.route('/', methods=['POST'])
 @role_required(['author', 'admin'])
 def create_blog():
-    return BlogController.create_blog(request,g.current_user.user_id)
+    return BlogController.create_blog(request,g.current_user.id)
 
 @blog_bp.route('/<int:blog_id>', methods=['PUT'])
 @role_required(['author', 'admin'])

@@ -14,16 +14,15 @@ class BlogController:
     def get_blog_by_id(blog_id):
         db = current_app.config['DATABASE']
         blog_by_id = db.fetch_one(Blog, filters={'id': blog_id})
-        author = db.fetch_one(User,filters = {'user_id' : blog_by_id.author_id})
+        author = db.fetch_one(User,filters = {'id' : blog_by_id.author_id})
         if blog_by_id:
             blog = {
                 'id': blog_by_id.id,
                 'title': blog_by_id.title,
                 'content': blog_by_id.content,
                 'author': {
-                    'id': author.user_id,
+                    'id': author.id,
                     'username': author.username,
-                    'email': author.email, 
                 }
             }
             return jsonify(blog), 200
@@ -59,7 +58,7 @@ class BlogController:
         if not blog:
             return jsonify({"error": "Blog not found"}), 404
 
-        if blog.author_id != current_user.user_id and current_user.role != "admin":
+        if blog.author_id != current_user.id and current_user.role != "admin":
             return jsonify({"error": "You do not have permission to update this blog"}), 403
 
         db.update_record(Blog, filters={"id": blog_id}, title=title, content=content)
@@ -81,7 +80,7 @@ class BlogController:
         if not blog:
             return jsonify({"error": "Blog not found"}), 404
 
-        if blog.author_id != current_user.user_id and current_user.role != "admin":
+        if blog.author_id != current_user.id and current_user.role != "admin":
             return jsonify({"error": "You do not have permission to delete this blog"}), 403
 
         db.delete_record(Blog, filters={"id": blog_id})
